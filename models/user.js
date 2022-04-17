@@ -62,14 +62,25 @@ userSchema.methods.setPassword = function(password) {
 
 exports.User = mongoose.model('User', userSchema);
 
-exports.validateUser = function validateUser(user){
+exports.validateUser = function validateUser(user) {
     const schema = Joi.object({
         phone: Joi.string().length(10).pattern(/^[0-9]+$/).required()
             .messages({'string.pattern.base': "Phone Number must contain numbers only"}),
-        email: Joi.string().pattern(/.+\@.+\..+/).required(),
+        email: Joi.string().pattern(/.+\@.+\..+/).required()
+        .messages({'string.pattern.base': "email is not valid"}),
         isAdmin: Joi.boolean(),
         password: Joi.string().required(),
         name: Joi.string().required()
+    });
+    return schema.validate(user);
+}
+
+exports.validateUserLogin = function validateUserLogin(user) {
+    const schema = Joi.object({
+        phone: Joi.string().length(10).pattern(/^[0-9]+$/).required()
+        .messages({'string.pattern.base': "Phone Number must contain numbers only"}),
+        password: Joi.string().required(),
+        isAdmin: Joi.boolean()
     });
     return schema.validate(user);
 }

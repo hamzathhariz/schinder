@@ -6,7 +6,12 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/', (req, res, next) => {
+router.post('/signup', (req, res, next) => {
   profileRepository.userSignUp(req, res, next);
 });
+
+router.post('/login', (req, res, next) => {
+  profileRepository.userLogin(req, res, next);
+});
+
 module.exports = router;
