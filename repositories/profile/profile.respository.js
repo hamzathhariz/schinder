@@ -29,7 +29,11 @@ exports.userSignUp =asyncMiddleware(async (req, res, next) => {
 
     newUser.phone = req.body.phone;
 
-    newUser.password=req.body.password
+    newUser.phone = req.body.phone;
+
+    newUser.phone = req.body.phone;
+
+    newUser.password=req.body.password;
 
     // Call setPassword function to hash password 
     newUser.setPassword(req.body.password); 
