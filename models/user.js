@@ -18,20 +18,6 @@ const userSchema = new mongoose.Schema(
             unique: true,
             match: /^[0-9]{10}$/
         },
-        cast: {
-            type: String,
-            required: true,
-            enum: ['OBC', 'SC/ST', 'NORMAL']
-        },
-        gender: {
-            type: String,
-            required: true,
-            enum: ['MALE', 'FEMALE']
-        },
-        income: {
-            type: Number,
-            required: true
-        },
         email: { 
             type: String,
             trim: true,
