@@ -36,7 +36,9 @@ exports.userSignUp =asyncMiddleware(async (req, res, next) => {
     newUser.password=req.body.password;
 
     // Call setPassword function to hash password 
-    newUser.setPassword(req.body.password); 
+    newUser.setPassword(req.body.password);
+    
+    var token = await newUser.generateAuthToken();
 
     // Save newUser object to database 
     await newUser.save((err, User) => { 
@@ -45,7 +47,7 @@ exports.userSignUp =asyncMiddleware(async (req, res, next) => {
             return res.status(response.statusCode).send(response); 
         } 
         else { 
-            let response = Response('success', 'user added');
+            let response = Response('success', 'user added', { token });
             return res.send(response);
         } 
     }); 
@@ -69,8 +71,9 @@ exports.userLogin = asyncMiddleware(async (req, res, next) => {
             return res.status(response.statusCode).send(response);
         } 
         else { 
-            if (user.validPassword(req.body.password)) { 
-                let response = Response('success', 'login');
+            if (user.validPassword(req.body.password)) {
+                var token = await user.generateAuthToken(); 
+                let response = Response('success', 'login', { token });
                 return res.send(response); 
             } 
             else { 
@@ -93,8 +96,9 @@ exports.userLogin = asyncMiddleware(async (req, res, next) => {
             return res.status(response.statusCode).send(response);
         }
 
-        else if (user.validPassword(req.body.password)) { 
-            let response = Response('success', 'login');
+        else if (user.validPassword(req.body.password)) {
+            var token = await user.generateAuthToken(); 
+            let response = Response('success', 'login', { token });
             return res.send(response);
         } 
         

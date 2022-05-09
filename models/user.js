@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 var crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 
 const userSchema = new mongoose.Schema(
@@ -53,12 +54,29 @@ userSchema.methods.setPassword = function(password) {
        1000, 64, `sha512`).toString(`hex`); 
    }; 
      
-   // Method to check the entered password is correct or not 
-   userSchema.methods.validPassword = function(password) { 
-       var hash = crypto.pbkdf2Sync(password,  
-       this.salt, 1000, 64, `sha512`).toString(`hex`); 
-       return this.hash === hash; 
-   }; 
+// Method to check the entered password is correct or not 
+userSchema.methods.validPassword = function(password) { 
+    var hash = crypto.pbkdf2Sync(password,  
+    this.salt, 1000, 64, `sha512`).toString(`hex`); 
+    return this.hash === hash; 
+}; 
+
+userSchema.methods.generateAuthToken = async function() { 
+    // Generate JWT Token 
+    const user = await this;
+
+    return jwt.sign(
+        {
+            _id: this._id,
+            name: this.name,
+            phone: this.phone,
+            email: this.email,
+            admin: this.isAdmin
+        }, // payload
+        'F&CKL;x&7%AgP.E%', // secret key
+        { expiresIn: '1 days' }
+    );
+}
 
 exports.User = mongoose.model('User', userSchema);
 
