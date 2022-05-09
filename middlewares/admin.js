@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const SECRETS = require('../config/secrets');
 const Response = require('../middlewares/response');
 
 
