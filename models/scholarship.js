@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 const { criteriaSchema } = require('./schemas/criteria.schema');
+const isObjectId = require('./validation/isObjectId');
 
 const scholarshipSchema = new mongoose.Schema({
     title: {
@@ -32,4 +33,21 @@ exports.validateScholarshipCreate = function validateScholarshipCreate(scholarhi
     })
 
    return schema.validate(scholarhip);
+}
+
+exports.validateApproveScholarship = function validateApproveScholarship(id) {
+    const schema = Joi.object({
+        id: Joi.custom(isObjectId).required()
+    });
+
+    return schema.validate(id);
+}
+
+exports.validateApplyScholarship = function validateApplyScholarship(data) {
+    const schema = Joi.object({
+        user: Joi.custom(isObjectId).required(),
+        scholarhip: Joi.custom(isObjectId).required()
+    });
+
+    return schema.validate(data);
 }
