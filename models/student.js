@@ -40,6 +40,14 @@ const studentSchema = new mongoose.Schema({
         max: 100,
         min: 0
     },
+    fathersName: {
+        type: String,
+        required: true
+    },
+    fathersOccupation: {
+        type: String,
+        required: true
+    },
     income: {
         type: String,
         required: true
@@ -63,7 +71,9 @@ exports.validateStudent = function validateStudent(student) {
         residence: Joi.string().required().valid('kerala'),
         aadharNo: Joi.string().max(12).min(12).required(),
         address: Joi.string().required(),
-        caste: Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara').required()
+        caste: Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara').required(),
+        fathersName: Joi.string().required(),
+        fathersOccupation: Joi.string().required()
     });
 
     return schema.validate(student);
