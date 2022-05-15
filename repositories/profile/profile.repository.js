@@ -62,46 +62,18 @@ exports.userLogin = asyncMiddleware(async (req, res, next) => {
         return res.status(response.statusCode).send(response);
     };
 
-    // Admin Login
-    if(req.body.isAdmin === true) {
-        var user = await User.findOne({ phone : req.body.phone, isAdmin: true });
-
-        if (user === null) { 
-            let response = Response('error', 'user not found');
-            return res.status(response.statusCode).send(response);
-        } 
-        else { 
-            if (user.validPassword(req.body.password)) {
-                var token = await user.generateAuthToken(); 
-                let response = Response('success', 'login', { token });
-                return res.send(response); 
-            } 
-            else { 
-                let response = Response('error', 'incorrect password');
-                return res.status(response.statusCode).send(response); 
-            } 
-        } 
-    }
-
-    // User Login 
     var user = await User.findOne({ phone : req.body.phone });
 
     if (user === null) { 
         let response = Response('error', 'user not found');
-        return res.status(response.statusCode).send(response); 
+        return res.status(response.statusCode).send(response);
     } 
     else { 
-        if(user.isAdmin) {
-            let response = Response('error', 'user not found');
-            return res.status(response.statusCode).send(response);
-        }
-
-        else if (user.validPassword(req.body.password)) {
+        if (user.validPassword(req.body.password)) {
             var token = await user.generateAuthToken(); 
             let response = Response('success', 'login', { token });
-            return res.send(response);
+            return res.send(response); 
         } 
-        
         else { 
             let response = Response('error', 'incorrect password');
             return res.status(response.statusCode).send(response); 
