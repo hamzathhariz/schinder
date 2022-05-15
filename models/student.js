@@ -9,9 +9,24 @@ const studentSchema = new mongoose.Schema({
         required: true,
         // unique: true
     },
+    aadharNo:{
+        type: String,
+        max: 12,
+        min: 12,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    caste: {
+        type: String,
+        required: true,
+        enum: ['pentacostal', 'latin', 'viswakarma', 'dheevara']
+    },
     relegion: {
         type: String,
-        enum: ['muslim', 'budhist', 'christian', 'jains'],
+        enum: ['muslim', 'budhist', 'christian', 'jains', 'general', 'ezhava'],
         required: true
     },
     category: {
@@ -45,7 +60,10 @@ exports.validateStudent = function validateStudent(student) {
         category: Joi.string().required().valid('obc', 'oec', 'sc/st'),
         percentage: Joi.number().min(0).required(),
         income: Joi.number().required().min(0),
-        residence: Joi.string().required().valid('kerala')
+        residence: Joi.string().required().valid('kerala'),
+        aadharNo: Joi.string().max(12).min(12).required(),
+        address: Joi.string().required(),
+        caste: Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara').required()
     });
 
     return schema.validate(student);
