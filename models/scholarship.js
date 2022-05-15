@@ -27,6 +27,7 @@ exports.validateScholarshipCreate = function validateScholarshipCreate(scholarhi
             relegion: Joi.array().items(Joi.string().valid('muslim', 'budhist', 'christian', 'jains')).required(),
             category: Joi.array().items(Joi.string().valid('obc', 'oec', 'sc/st')).required(),
             percentage: Joi.number().min(0).required(),
+            caste: Joi.array().items(Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara')).required(),
             income: Joi.number().required().min(0),
             residence: Joi.array().items(Joi.string().valid('kerala')).required()
         }).required()

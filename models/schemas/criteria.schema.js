@@ -19,6 +19,11 @@ const criteriaSchema = new mongoose.Schema({
         max: 100,
         min: 0
     },
+    caste: [{
+        type: String,
+        required: true,
+        enum: ['pentacostal', 'latin', 'viswakarma', 'dheevara']
+    }],
     income: {
         type: String,
         required: true
