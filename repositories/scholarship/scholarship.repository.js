@@ -4,6 +4,7 @@ const pagination = require('../../utilities/pagination');
 const { Scholarship, validateScholarshipCreate, validateApproveScholarship, validateApplyScholarship } = require('../../models/scholarship');
 const { AppliedScholarship } = require('../../models/appliedScholarship');
 const { User } = require('../../models/user');
+const message = require('../../services/sms.service');
 
 exports.scholarshipCreation = asyncMiddleware(async (req, res, next) => {
     const { error } = validateScholarshipCreate(req.body);
@@ -59,9 +60,13 @@ exports.approveScholarship = asyncMiddleware(async (req, res, next) => {
         return res.status(response.statusCode).send(response);
     };
     
-    var result = await AppliedScholarship.updateOne({ _id: req.query.id }, { isApproved: true });
+    var result = await AppliedScholarship.findByIdAndUpdate(req.query.id , { isApproved: true });
+    if(result) {
+        var user = await User.findById(result.student);
+        var scholarhip = await Scholarship.findById(result.scholarship);
 
-    if(result.modifiedCount > 0) {
+        message('918139800530', `Approved: ${scholarhip.title}`);
+
         let response = Response('success', '');
         return res.send(response);
     }
