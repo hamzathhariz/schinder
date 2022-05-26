@@ -26,7 +26,7 @@ const studentSchema = new mongoose.Schema({
     },
     relegion: {
         type: String,
-        enum: ['muslim', 'budhist', 'christian', 'jains', 'general', 'ezhava'],
+        enum: ['muslim', 'budhist', 'christian', 'jains', 'general', 'ezhava', 'hindu'],
         required: true
     },
     category: {
@@ -64,7 +64,7 @@ exports.Student = mongoose.model('Student', studentSchema);
 exports.validateStudent = function validateStudent(student) {
     const schema = Joi.object({
         student: Joi.custom(isObjectId).required(),
-        relegion: Joi.string().valid('muslim', 'budhist', 'christian', 'jains').required(),
+        relegion: Joi.string().valid('muslim', 'budhist', 'christian', 'jains', 'hindu').required(),
         category: Joi.string().required().valid('obc', 'oec', 'sc/st'),
         percentage: Joi.number().min(0).required(),
         income: Joi.number().required().min(0),

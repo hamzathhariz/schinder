@@ -24,7 +24,7 @@ exports.validateScholarshipCreate = function validateScholarshipCreate(scholarhi
         title: Joi.string().required().min(8),
         description:Joi.string().required().min(23),
         criteria: Joi.object({
-            relegion: Joi.array().items(Joi.string().valid('muslim', 'budhist', 'christian', 'jains')).required(),
+            relegion: Joi.array().items(Joi.string().valid('muslim', 'budhist', 'christian', 'jains', 'hindu')).required(),
             category: Joi.array().items(Joi.string().valid('obc', 'oec', 'sc/st')).required(),
             percentage: Joi.number().min(0).required(),
             caste: Joi.array().items(Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara')).required(),
@@ -47,7 +47,7 @@ exports.validateApproveScholarship = function validateApproveScholarship(id) {
 exports.validateApplyScholarship = function validateApplyScholarship(data) {
     const schema = Joi.object({
         user: Joi.custom(isObjectId).required(),
-        scholarhip: Joi.custom(isObjectId).required()
+        scholarship: Joi.custom(isObjectId).required()
     });
 
     return schema.validate(data);

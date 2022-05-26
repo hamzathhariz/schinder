@@ -21,9 +21,21 @@ exports.scholarshipCreation = asyncMiddleware(async (req, res, next) => {
 
 
 exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
+    var user = await User.findById(req.query._id);
+
     const page_no = Number(req.query.page) > 0 ? Number(req.query.page) : 1;
-    var count = await Scholarship.count();
-    var scholarship = await Scholarship.find().sort('-_id');
+    var count = await Scholarship.count({'criteria.relegion': user.relegion, 'criteria.category': user.category,
+        'criteria.percentage': { $gte: user.percentage },
+        'criteria.income': { $lte: user.income },
+        'criteria.residence': user.residence
+    });
+    
+    var scholarship = await Scholarship.find({ 
+        'criteria.relegion': user.relegion, 'criteria.category': user.category,
+        'criteria.percentage': { $gte: user.percentage },
+        'criteria.income': { $lte: user.income },
+        'criteria.residence': user.residence
+        }).sort('-_id');
 
     let response = Response('success', '', { scholarship });
     response = pagination(response, count, 10, page_no);
@@ -32,7 +44,7 @@ exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
 
 exports.adminScholarshipView = asyncMiddleware(async (req, res, next) => {
     var appliedScholarship = await AppliedScholarship.find()
-        .populate('student')
+        .populate('student', 'name email phone ')
         .populate('scholarship');
 
     let response = Response('success', '', appliedScholarship);
@@ -66,35 +78,6 @@ exports.applyScholarship = asyncMiddleware(async (req, res, next) => {
         let response = Response('error', error.details[0].message);
         return res.status(response.statusCode).send(response);
     };
-
-    var user = User.findById(req.query.user);
-
-    var scholarship = Scholarship.findById(req.query.scholarship);
-
-    if( !user.relegion in scholarship.criteria.relegion ) {
-        let response = Response('error', 'Relegion Mismatch');
-        return res.send(response);
-    }
-
-    if( !user.category in scholarship.criteria.category ) {
-        let response = Response('error', 'Category Mismatch');
-        return res.send(response);
-    }
-
-    if( user.percentage < scholarship.criteria.percentage ) {
-        let response = Response('error', 'Percentage is not enough');
-        return res.send(response);
-    }
-
-    if( user.income > scholarship.criteria.income ) {
-        let response = Response('error', 'income is not valid');
-        return res.send(response);
-    }
-
-    if( !user.residence in scholarship.criteria.residence ) {
-        let response = Response('error', 'income is not valid');
-        return res.send(response);
-    } 
 
     var applied = new AppliedScholarship({
         student: req.query.user,

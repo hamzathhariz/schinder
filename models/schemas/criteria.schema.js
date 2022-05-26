@@ -5,7 +5,7 @@ const { array } = require('joi');
 const criteriaSchema = new mongoose.Schema({
     relegion:  [{
         type: String,
-        enum: ['muslim', 'budhist', 'christian', 'jains'],
+        enum: ['muslim', 'budhist', 'christian', 'jains', 'hindu'],
         required: true
     }],
     category: [{
