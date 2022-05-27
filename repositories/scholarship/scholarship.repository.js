@@ -45,8 +45,8 @@ exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
 
 exports.adminScholarshipView = asyncMiddleware(async (req, res, next) => {
     var appliedScholarship = await AppliedScholarship.find()
-        .populate('student', 'name email phone ')
-        .populate('scholarship');
+        .populate('student', 'name')
+        .populate('scholarship', 'title');
 
     let response = Response('success', '', appliedScholarship);
     return res.send(response);
