@@ -65,7 +65,7 @@ exports.approveScholarship = asyncMiddleware(async (req, res, next) => {
         var user = await User.findById(result.student);
         var scholarhip = await Scholarship.findById(result.scholarship);
 
-        message('918139800530', `Approved: ${scholarhip.title}`);
+        message('9180755 43244', `Approved: ${scholarhip.title}`);
 
         let response = Response('success', '');
         return res.send(response);
