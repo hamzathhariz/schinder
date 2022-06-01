@@ -5,6 +5,7 @@ const { Scholarship, validateScholarshipCreate, validateApproveScholarship, vali
 const { AppliedScholarship } = require('../../models/appliedScholarship');
 const { User } = require('../../models/user');
 const message = require('../../services/sms.service');
+const { Student } = require('../../models/student');
 
 exports.scholarshipCreation = asyncMiddleware(async (req, res, next) => {
     const { error } = validateScholarshipCreate(req.body);
@@ -22,19 +23,20 @@ exports.scholarshipCreation = asyncMiddleware(async (req, res, next) => {
 
 
 exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
-    var user = await User.findById(req.query._id);
+    var user = await Student.findOne({ student: req.query._id });
 
     const page_no = Number(req.query.page) > 0 ? Number(req.query.page) : 1;
     var count = await Scholarship.count({'criteria.relegion': user.relegion, 'criteria.category': user.category,
-        'criteria.percentage': { $gte: user.percentage },
-        'criteria.income': { $lte: user.income },
+        'criteria.percentage': { $lte: user.percentage },
+        'criteria.income': { $gte: user.income },
         'criteria.residence': user.residence
     });
     
     var scholarship = await Scholarship.find({ 
-        'criteria.relegion': user.relegion, 'criteria.category': user.category,
-        'criteria.percentage': { $gte: user.percentage },
-        'criteria.income': { $lte: user.income },
+        'criteria.relegion': user.relegion, 
+        'criteria.category': user.category,
+        'criteria.percentage': { $lte: user.percentage },
+        'criteria.income': { $gte: user.income },
         'criteria.residence': user.residence
         }).sort('-_id');
 
