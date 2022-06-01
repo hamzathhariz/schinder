@@ -17,6 +17,20 @@ exports.scholarshipCreation = asyncMiddleware(async (req, res, next) => {
 
     var scholarship = new Scholarship(req.body);
     await scholarship.save();
+
+    var students = await Student.find({
+        'relegion': scholarship.criteria.relegion, 
+        'category': scholarship.criteria.category,
+        'percentage': { $gte: scholarship.criteria.percentage },
+        'income': { $lte: scholarship.criteria.income },
+        'residence': scholarship.criteria.residence 
+    }).populate('student', 'phone');
+
+    for(let i in students) {
+        message(`91${students[i].student.phone}`, `Eligible: ${scholarship.title}`);
+    }
+    
+
     let response = Response('success', '', scholarship);
     return res.send(response); 
 }); 
