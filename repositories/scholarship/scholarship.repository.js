@@ -66,8 +66,13 @@ exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
 exports.adminScholarshipView = asyncMiddleware(async (req, res, next) => {
     var appliedScholarship = await AppliedScholarship.find()
         .populate('student', 'name')
-        .populate('scholarship', 'title');
-
+        .populate('scholarship', 'title').lean();
+    
+    for(let i in appliedScholarship) {
+        var student = await Student.findOne({student:appliedScholarship[i].student._id});
+        appliedScholarship[i].student.criteria = student
+    }
+    
     let response = Response('success', '', appliedScholarship);
     return res.send(response);
 });
