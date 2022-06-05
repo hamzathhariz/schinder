@@ -75,7 +75,13 @@ exports.approveScholarship = asyncMiddleware(async (req, res, next) => {
         let response = Response('error', error.details[0].message);
         return res.status(response.statusCode).send(response);
     };
-    
+    console.log(req.query.approved)
+    if(req.query.approved == 'false') {
+        await AppliedScholarship.deleteOne({_id: req.query.id});
+        let response = Response('success', 'rejected');
+        return res.send(response);
+    }
+
     var result = await AppliedScholarship.findByIdAndUpdate(req.query.id , { isApproved: true });
     if(result) {
         var user = await User.findById(result.student);
@@ -83,7 +89,7 @@ exports.approveScholarship = asyncMiddleware(async (req, res, next) => {
 
         message(`91${user.phone}`, `Approved: ${scholarhip.title}`);
 
-        let response = Response('success', '');
+        let response = Response('success', 'Approved');
         return res.send(response);
     }
 

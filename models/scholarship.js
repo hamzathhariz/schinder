@@ -38,7 +38,8 @@ exports.validateScholarshipCreate = function validateScholarshipCreate(scholarhi
 
 exports.validateApproveScholarship = function validateApproveScholarship(id) {
     const schema = Joi.object({
-        id: Joi.custom(isObjectId).required()
+        id: Joi.custom(isObjectId).required(),
+        approved: Joi.boolean().required()
     });
 
     return schema.validate(id);
