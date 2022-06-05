@@ -32,7 +32,15 @@ const criteriaSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['kerala']
-    }]
+    }],
+    startDate: {
+        type: Date, 
+        required: true
+    },
+    endDate: {
+        type: Date, 
+        required: true  
+    }
 });
 
 exports.criteriaSchema= criteriaSchema;

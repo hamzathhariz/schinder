@@ -56,7 +56,11 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['kerala']
-    }
+    },
+    appliedScholarships: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'AppliedScholarship'
+    }]
 });
 
 exports.Student = mongoose.model('Student', studentSchema);

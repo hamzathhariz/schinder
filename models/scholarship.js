@@ -29,7 +29,9 @@ exports.validateScholarshipCreate = function validateScholarshipCreate(scholarhi
             percentage: Joi.number().min(0).required(),
             caste: Joi.array().items(Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara')).required(),
             income: Joi.number().required().min(0),
-            residence: Joi.array().items(Joi.string().valid('kerala')).required()
+            residence: Joi.array().items(Joi.string().valid('kerala')).required(),
+            startDate: Joi.date().timestamp('unix').required(),
+            endDate: Joi.date().timestamp('unix').min(Joi.ref('startDate')).required()
         }).required()
     })
 
@@ -65,9 +67,19 @@ exports.validateScholarshipEdit = function validateScholarshipCreate(scholarhip)
             percentage: Joi.number().min(0).required(),
             caste: Joi.array().items(Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara')).required(),
             income: Joi.number().required().min(0),
-            residence: Joi.array().items(Joi.string().valid('kerala')).required()
+            residence: Joi.array().items(Joi.string().valid('kerala')).required(),
+            startDate: Joi.date().timestamp('unix').required(),
+            endDate: Joi.date().timestamp('unix').min(Joi.ref('startDate')).required()
         }).required()
     })
 
    return schema.validate(scholarhip);
+}
+
+exports.deleteStudentValidation = function deleteStudentValidation(id) {
+    const schema = Joi.object({
+        id: Joi.custom(isObjectId).required()
+    });
+
+    return schema.validate(id);
 }

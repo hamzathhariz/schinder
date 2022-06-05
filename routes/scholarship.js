@@ -30,4 +30,12 @@ router.get('/admin-view', (req, res, next) => {
     scholarhip.scholarships(req, res, next)
 });
 
+router.get('/students-list', (req, res, next) => {
+    scholarhip.studentsList(req, res, next);
+});
+
+router.post('/delete', (req, res, next) => {
+    scholarhip.deleteStudent(req, res, next);
+});
+
 module.exports = router;
