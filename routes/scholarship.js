@@ -26,4 +26,8 @@ router.post('/edit', (req, res, next) => {
     scholarhip.scholarshipEdit(req, res, next);
 });
 
+router.get('/admin-view', (req, res, next) => {
+    scholarhip.scholarships(req, res, next)
+});
+
 module.exports = router;

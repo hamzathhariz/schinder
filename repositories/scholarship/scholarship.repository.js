@@ -52,7 +52,7 @@ exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
         'criteria.percentage': { $lte: user.percentage },
         'criteria.income': { $gte: user.income },
         'criteria.residence': user.residence
-        }).sort('-_id');
+        }).sort('-_id').limit(10).skip(page_no*10);
 
     let response = Response('success', '', { scholarship });
     response = pagination(response, count, 10, page_no);
@@ -129,4 +129,15 @@ exports.scholarshipEdit = asyncMiddleware(async (req, res, next) => {
         let response = Response('error', '');
         return res.status(response.statusCode).send(response);
     }
+});
+
+
+exports.scholarships = asyncMiddleware(async (req, res, next) => {
+    const page_no = Number(req.query.page) > 0 ? Number(req.query.page) : 1;
+    var count = await Scholarship.count();
+    var scholarships = await Scholarship.find()
+    .limit(10).skip(page_no*10);
+    let response = Response('success', '', {scholarships});
+    response = pagination(response, count, 10, page_no);
+    return res.send(response);
 });
