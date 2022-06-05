@@ -22,4 +22,8 @@ router.post('/apply-scholarship', (req, res, next) => {
     scholarhip.applyScholarship(req, res, next);
 });
 
+router.post('/edit', (req, res, next) => {
+    scholarhip.scholarshipEdit(req, res, next);
+});
+
 module.exports = router;

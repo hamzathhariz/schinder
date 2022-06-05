@@ -1,7 +1,7 @@
 const asyncMiddleware = require('../../middlewares/asyncMiddleware');
 const Response = require('../../middlewares/response');
 const pagination = require('../../utilities/pagination');
-const { Scholarship, validateScholarshipCreate, validateApproveScholarship, validateApplyScholarship } = require('../../models/scholarship');
+const { Scholarship, validateScholarshipCreate, validateApproveScholarship, validateApplyScholarship, validateScholarshipEdit } = require('../../models/scholarship');
 const { AppliedScholarship } = require('../../models/appliedScholarship');
 const { User } = require('../../models/user');
 const message = require('../../services/sms.service');
@@ -109,4 +109,24 @@ exports.applyScholarship = asyncMiddleware(async (req, res, next) => {
 
     let response = Response('success', 'applied');
     return res.send(response);
+});
+
+exports.scholarshipEdit = asyncMiddleware(async (req, res, next) => {
+    req.body.id = req.query.id;
+    var data = req.body;
+    const { error } = validateScholarshipEdit(data);
+
+    if(error) {
+        let response = Response('error', error.details[0].message);
+        return res.status(response.statusCode).send(response);
+    };
+
+    var scholarship = await Scholarship.updateOne({ _id: data.id }, data);
+    if(scholarship.modifiedCount > 0) {
+        let response = Response('success', '', data);
+        return res.send(response);
+    } else {
+        let response = Response('error', '');
+        return res.status(response.statusCode).send(response);
+    }
 });

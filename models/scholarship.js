@@ -52,3 +52,21 @@ exports.validateApplyScholarship = function validateApplyScholarship(data) {
 
     return schema.validate(data);
 }
+
+exports.validateScholarshipEdit = function validateScholarshipCreate(scholarhip){
+    const schema = Joi.object({
+        id: Joi.custom(isObjectId).required(),
+        title: Joi.string().required().min(8),
+        description:Joi.string().required().min(23),
+        criteria: Joi.object({
+            relegion: Joi.array().items(Joi.string().valid('muslim', 'budhist', 'christian', 'jains', 'hindu')).required(),
+            category: Joi.array().items(Joi.string().valid('obc', 'oec', 'sc/st')).required(),
+            percentage: Joi.number().min(0).required(),
+            caste: Joi.array().items(Joi.string().valid('pentacostal', 'latin', 'viswakarma', 'dheevara')).required(),
+            income: Joi.number().required().min(0),
+            residence: Joi.array().items(Joi.string().valid('kerala')).required()
+        }).required()
+    })
+
+   return schema.validate(scholarhip);
+}
