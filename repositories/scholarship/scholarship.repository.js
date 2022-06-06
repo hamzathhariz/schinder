@@ -1,7 +1,7 @@
 const asyncMiddleware = require('../../middlewares/asyncMiddleware');
 const Response = require('../../middlewares/response');
-const pagination = require('../../utilities/pagination');
-const { Scholarship, validateScholarshipCreate, validateApproveScholarship, validateApplyScholarship, validateScholarshipEdit, deleteStudentValidation } = require('../../models/scholarship');
+// const pagination = require('../../utilities/pagination');
+const { Scholarship, validateScholarshipCreate, validateApproveScholarship, validateApplyScholarship, validateScholarshipEdit, deleteStudentValidation, validationEditScholarshipView } = require('../../models/scholarship');
 const { AppliedScholarship } = require('../../models/appliedScholarship');
 const { User } = require('../../models/user');
 const message = require('../../services/sms.service');
@@ -59,7 +59,7 @@ exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
         }).sort('-_id').limit(10).skip((page_no-1)*10);
 
     let response = Response('success', '', { scholarship });
-    response = pagination(response, count, 10, page_no);
+    // response = pagination(response, count, 10, page_no);
     return res.send(response);
 });
 
@@ -155,7 +155,7 @@ exports.scholarships = asyncMiddleware(async (req, res, next) => {
     var scholarships = await Scholarship.find()
     .limit(10).skip((page_no-1)*10);
     let response = Response('success', '', {scholarships});
-    response = pagination(response, count, 10, page_no);
+    // response = pagination(response, count, 10, page_no);
     return res.send(response);
 });
 
@@ -166,7 +166,7 @@ exports.studentsList = asyncMiddleware(async (req, res, next) => {
     var students = await User.find({isAdmin: false})
     .limit(10).skip((page_no-1)*10);
     let response = Response('success', '', {students});
-    response = pagination(response, count, 10, page_no);
+    // response = pagination(response, count, 10, page_no);
     return res.send(response);
 });
 
@@ -185,3 +185,14 @@ exports.deleteStudent = asyncMiddleware(async (req, res, next) => {
     return res.send(response);
 });
 
+exports.scholarshipEditView = asyncMiddleware(async (req, res, next) => {
+    const { error } = validationEditScholarshipView(req.query);
+
+    if(error) {
+        let response = Response('error', error.details[0].message);
+        return res.status(response.statusCode).send(response);
+    };
+    var scholarship = await Scholarship.findById(req.query.id);
+    let response = Response('success', '', scholarship);
+    return res.send(response);
+});

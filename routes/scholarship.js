@@ -38,4 +38,8 @@ router.post('/delete', (req, res, next) => {
     scholarhip.deleteStudent(req, res, next);
 });
 
+router.get('/edit-view', (req, res, next) => {
+    scholarhip.scholarshipEditView(req, res, next);
+});
+
 module.exports = router;

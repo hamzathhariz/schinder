@@ -83,3 +83,11 @@ exports.deleteStudentValidation = function deleteStudentValidation(id) {
 
     return schema.validate(id);
 }
+
+exports.validationEditScholarshipView = function validationEditScholarshipView(id) {
+    const schema = Joi.object({
+        id: Joi.custom(isObjectId).required()
+    });
+
+    return schema.validate(id);
+}
