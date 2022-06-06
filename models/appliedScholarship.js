@@ -17,6 +17,10 @@ const appliedScholarshipSchema = new mongoose.Schema({
     isApproved: {
         type: Boolean,
         default: false
+    },
+    isRejected: {
+        type: Boolean,
+        default: false
     }
 });
 

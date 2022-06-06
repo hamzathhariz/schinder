@@ -42,4 +42,8 @@ router.get('/edit-view', (req, res, next) => {
     scholarhip.scholarshipEditView(req, res, next);
 });
 
+router.get('/approved-rejected', (req, res, next) => {
+    scholarhip.approvedRejectedList(req, res, next);
+});
+
 module.exports = router;

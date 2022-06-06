@@ -64,7 +64,7 @@ exports.scholarshipView = asyncMiddleware(async (req, res, next) => {
 });
 
 exports.adminScholarshipView = asyncMiddleware(async (req, res, next) => {
-    var appliedScholarship = await AppliedScholarship.find()
+    var appliedScholarship = await AppliedScholarship.find({isRejected: false})
         .populate('student', 'name')
         .populate('scholarship', 'title').lean();
     
@@ -86,7 +86,7 @@ exports.approveScholarship = asyncMiddleware(async (req, res, next) => {
     };
 
     if(req.query.approved == 'false') {
-        await AppliedScholarship.deleteOne({_id: req.query.id});
+        await AppliedScholarship.updateOne({_id: req.query.id}, { $set: {isRejected: true} });
         let response = Response('success', 'rejected');
         return res.send(response);
     }
@@ -194,5 +194,19 @@ exports.scholarshipEditView = asyncMiddleware(async (req, res, next) => {
     };
     var scholarship = await Scholarship.findById(req.query.id);
     let response = Response('success', '', scholarship);
+    return res.send(response);
+});
+
+
+exports.approvedRejectedList = asyncMiddleware(async (req, res, next) => {
+    var approved = await AppliedScholarship.find({isApproved: true})
+    .populate('student', 'name')
+    .populate('scholarship', 'title');
+
+    var rejected = await AppliedScholarship.find({isRejected: true})
+    .populate('student', 'name')
+    .populate('scholarship', 'title');;
+    
+    let response = Response('success', '', {approved, rejected});
     return res.send(response);
 });
